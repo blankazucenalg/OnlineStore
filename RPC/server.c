@@ -9,6 +9,15 @@ typedef struct Usuario{
    char pass[15];
 }Usuario;
 
+typedef struct Producto
+{
+   int idCategoria;
+   char *producto;
+   float precio;
+   int existencia;
+   char *descripcion;
+}Producto;
+
    MYSQL *conn;
    MYSQL_RES *res;
    MYSQL_ROW row;
@@ -107,10 +116,37 @@ const char* obtenerProducto(char *criteria){
       return resultado;
 }
 
+char* agregarProducto(Producto *p){
+      conectarBD();
+   char query[500];
+   char *header,*aux;
+   char *resultado = (char *)malloc(sizeof(char)*BUFSIZ);
+   header = "Id\tProducto\tPrecio\tExistencia\tDescripcion\tCateg\n";
+   aux = (char *)malloc(sizeof(char)*1024);
+
+   sprintf(query,"insert into producto (id_categoria, nb_producto, nu_precio, nu_existencia, dx_descripcion) values (%d,'%s',%f,%d,'%s')",p->idCategoria,p->producto, p->precio, p->existencia, p->descripcion);
+   /* send SQL query */
+   if (mysql_query(conn, query)) {
+      fprintf(stderr, "%s", mysql_error(conn));
+      exit(1);
+   }
+   res = mysql_use_result(conn);
+   /* output table name */
+   sprintf(resultado,"%s", header);
+   if ((row = mysql_fetch_row(res)) != NULL) {
+      resultado = "Insertado con éxito.";
+   } else {
+      resultado = "Error al insertar";
+   }
+   desconectarBD();
+      return resultado;
+}
+
 main() {
    int opc, userType;
    char *criteria = malloc(sizeof(char)*200);
    Usuario* yo = malloc(sizeof(Usuario));
+   Producto* p = malloc(sizeof(Producto));
    printf("Usuario: ");
    scanf("%15s",yo->login);
    printf("Contraseña: ");
@@ -118,7 +154,8 @@ main() {
    conectarBD();
    userType = iniciarSesion(yo);
    if(userType == 1){
-      do{ //Admin User
+      do{ 
+      //Admin User
          printf("\nAdministrador \n1. Mostrar productos \n2. Buscar un producto \n3. Agregar productos \n4. Cerrar sesión y salir\nSeleccione una opción: ");
          scanf("%d",&opc);
          switch(opc){
@@ -131,6 +168,19 @@ main() {
                printf("%s", obtenerProducto(criteria));
                break;
             case 3: //Add products
+               printf("Introduce a continuación los datos del producto\n");
+               printf("idCategoria: ");
+               scanf("%d",&(p->idCategoria));
+               printf("Nombre: ");
+               scanf("%s",p->producto);
+               printf("Precio: ");
+               scanf("%f",&(p->precio));
+               printf("Existencia: ");
+               scanf("%d",&(p->existencia));
+               printf("Descripción: ");
+               scanf("%s",p->descripcion);
+               printf("%s\n", agregarProducto(p));
+
                break;
             case 4:
                printf("Bye\n");

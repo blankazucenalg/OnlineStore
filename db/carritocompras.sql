@@ -22,13 +22,13 @@ DROP TABLE IF EXISTS `carritocompras`.`categoria` ;
 
 CREATE TABLE IF NOT EXISTS `carritocompras`.`categoria` (
   `id_categoria` INT(10) NOT NULL AUTO_INCREMENT,
-  `id_padre` INT(10) NOT NULL,
+  `id_padre` INT(10),
   `nb_categoria` VARCHAR(50) NOT NULL,
   `tx_descripcion` VARCHAR(256) NOT NULL,
   PRIMARY KEY (`id_categoria`),
   INDEX `FKtbl01_cate758351_idx` (`id_categoria` ASC),
   CONSTRAINT `FKtbl01_cate758351`
-    FOREIGN KEY (`id_categoria`)
+    FOREIGN KEY (`id_padre`)
     REFERENCES `carritocompras`.`categoria` (`id_categoria`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
@@ -59,7 +59,7 @@ DEFAULT CHARACTER SET = latin1;
 DROP TABLE IF EXISTS `carritocompras`.`producto` ;
 
 CREATE TABLE IF NOT EXISTS `carritocompras`.`producto` (
-  `id_producto` INT(10) NOT NULL,
+  `id_producto` INT(10) NOT NULL AUTO_INCREMENT,
   `id_categoria` INT(10) NOT NULL,
   `nb_producto` VARCHAR(80) NOT NULL,
   `nu_precio` FLOAT NOT NULL,
@@ -139,7 +139,7 @@ DEFAULT CHARACTER SET = latin1;
 DROP TABLE IF EXISTS `carritocompras`.`producto_compra` ;
 
 CREATE TABLE IF NOT EXISTS `carritocompras`.`producto_compra` (
-  `id_producto` INT(10) NOT NULL,
+  `id_producto` INT(10) NOT NULL AUTO_INCREMENT,
   `id_compra` INT(10) NOT NULL,
   `id_categoria` INT(10) NOT NULL,
   PRIMARY KEY (`id_producto`, `id_compra`, `id_categoria`),

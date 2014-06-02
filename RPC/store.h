@@ -9,20 +9,10 @@
 #include <rpc/rpc.h>
 
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-struct Producto {
-	long id;
-	char producto[80];
-	double precio;
-	int existencia;
-	char descripcion[255];
-};
-typedef struct Producto Producto;
 
 struct Usuario {
 	char login[15];
@@ -30,49 +20,52 @@ struct Usuario {
 };
 typedef struct Usuario Usuario;
 
-
 #define ONLINE_STORE 0x20000001
 #define VERSION_1 1
 
 #if defined(__STDC__) || defined(__cplusplus)
-#define obtenerProducto 1
-extern  Producto * obtenerproducto_1(char *, CLIENT *);
-extern  Producto * obtenerproducto_1_svc(char *, struct svc_req *);
-#define comprarProducto 2
-extern  int * comprarproducto_1(Producto *, CLIENT *);
-extern  int * comprarproducto_1_svc(Producto *, struct svc_req *);
-#define quitarProducto 3
-extern  int * quitarproducto_1(Producto *, CLIENT *);
-extern  int * quitarproducto_1_svc(Producto *, struct svc_req *);
-#define iniciarSesion 4
+#define iniciarSesion 1
 extern  int * iniciarsesion_1(Usuario *, CLIENT *);
 extern  int * iniciarsesion_1_svc(Usuario *, struct svc_req *);
+#define consultarProductos 2
+extern  char ** consultarproductos_1(char **, CLIENT *);
+extern  char ** consultarproductos_1_svc(char **, struct svc_req *);
+#define obtenerProducto 3
+extern  char ** obtenerproducto_1(char **, CLIENT *);
+extern  char ** obtenerproducto_1_svc(char **, struct svc_req *);
+#define comprarProducto 4
+extern  int * comprarproducto_1(int *, CLIENT *);
+extern  int * comprarproducto_1_svc(int *, struct svc_req *);
+#define quitarProducto 5
+extern  int * quitarproducto_1(int *, CLIENT *);
+extern  int * quitarproducto_1_svc(int *, struct svc_req *);
 extern int online_store_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
-#define obtenerProducto 1
-extern  Producto * obtenerproducto_1();
-extern  Producto * obtenerproducto_1_svc();
-#define comprarProducto 2
-extern  int * comprarproducto_1();
-extern  int * comprarproducto_1_svc();
-#define quitarProducto 3
-extern  int * quitarproducto_1();
-extern  int * quitarproducto_1_svc();
-#define iniciarSesion 4
+#define iniciarSesion 1
 extern  int * iniciarsesion_1();
 extern  int * iniciarsesion_1_svc();
+#define consultarProductos 2
+extern  char ** consultarproductos_1();
+extern  char ** consultarproductos_1_svc();
+#define obtenerProducto 3
+extern  char ** obtenerproducto_1();
+extern  char ** obtenerproducto_1_svc();
+#define comprarProducto 4
+extern  int * comprarproducto_1();
+extern  int * comprarproducto_1_svc();
+#define quitarProducto 5
+extern  int * quitarproducto_1();
+extern  int * quitarproducto_1_svc();
 extern int online_store_1_freeresult ();
 #endif /* K&R C */
 
 /* the xdr functions */
 
 #if defined(__STDC__) || defined(__cplusplus)
-extern  bool_t xdr_Producto (XDR *, Producto*);
 extern  bool_t xdr_Usuario (XDR *, Usuario*);
 
 #else /* K&R C */
-extern bool_t xdr_Producto ();
 extern bool_t xdr_Usuario ();
 
 #endif /* K&R C */

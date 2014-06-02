@@ -20,10 +20,11 @@ static void
 online_store_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
-		char obtenerproducto_1_arg;
-		Producto comprarproducto_1_arg;
-		Producto quitarproducto_1_arg;
 		Usuario iniciarsesion_1_arg;
+		char *consultarproductos_1_arg;
+		char *obtenerproducto_1_arg;
+		int comprarproducto_1_arg;
+		int quitarproducto_1_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -34,28 +35,34 @@ online_store_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		(void) svc_sendreply (transp, (xdrproc_t) xdr_void, (char *)NULL);
 		return;
 
+	case iniciarSesion:
+		_xdr_argument = (xdrproc_t) xdr_Usuario;
+		_xdr_result = (xdrproc_t) xdr_int;
+		local = (char *(*)(char *, struct svc_req *)) iniciarsesion_1_svc;
+		break;
+
+	case consultarProductos:
+		_xdr_argument = (xdrproc_t) xdr_wrapstring;
+		_xdr_result = (xdrproc_t) xdr_wrapstring;
+		local = (char *(*)(char *, struct svc_req *)) consultarproductos_1_svc;
+		break;
+
 	case obtenerProducto:
-		_xdr_argument = (xdrproc_t) xdr_char;
-		_xdr_result = (xdrproc_t) xdr_Producto;
+		_xdr_argument = (xdrproc_t) xdr_wrapstring;
+		_xdr_result = (xdrproc_t) xdr_wrapstring;
 		local = (char *(*)(char *, struct svc_req *)) obtenerproducto_1_svc;
 		break;
 
 	case comprarProducto:
-		_xdr_argument = (xdrproc_t) xdr_Producto;
+		_xdr_argument = (xdrproc_t) xdr_int;
 		_xdr_result = (xdrproc_t) xdr_int;
 		local = (char *(*)(char *, struct svc_req *)) comprarproducto_1_svc;
 		break;
 
 	case quitarProducto:
-		_xdr_argument = (xdrproc_t) xdr_Producto;
+		_xdr_argument = (xdrproc_t) xdr_int;
 		_xdr_result = (xdrproc_t) xdr_int;
 		local = (char *(*)(char *, struct svc_req *)) quitarproducto_1_svc;
-		break;
-
-	case iniciarSesion:
-		_xdr_argument = (xdrproc_t) xdr_Usuario;
-		_xdr_result = (xdrproc_t) xdr_int;
-		local = (char *(*)(char *, struct svc_req *)) iniciarsesion_1_svc;
 		break;
 
 	default:

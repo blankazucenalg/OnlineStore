@@ -11,14 +11,16 @@ void
 online_store_1(char *host)
 {
 	CLIENT *clnt;
-	Producto  *result_1;
-	char  obtenerproducto_1_arg;
-	int  *result_2;
-	Producto  comprarproducto_1_arg;
-	int  *result_3;
-	Producto  quitarproducto_1_arg;
-	int  *result_4;
+	int  *result_1;
 	Usuario  iniciarsesion_1_arg;
+	char * *result_2;
+	char * consultarproductos_1_arg;
+	char * *result_3;
+	char * obtenerproducto_1_arg;
+	int  *result_4;
+	int  comprarproducto_1_arg;
+	int  *result_5;
+	int  quitarproducto_1_arg;
 
 #ifndef	DEBUG
 	clnt = clnt_create (host, ONLINE_STORE, VERSION_1, "udp");
@@ -28,33 +30,93 @@ online_store_1(char *host)
 	}
 #endif	/* DEBUG */
 
-	
-	Usuario* yo = malloc(sizeof(Usuario));
-   	printf("Inicie sesión para continuar \nUsuario: ");
-   	scanf("%15s",yo->login);
-   	printf("Contraseña: ");
-   	scanf("%15s",yo->pass);
-   	result_4 = iniciarsesion_1(yo, clnt);
-	if (result_4 == (int *) NULL) {
+int opc;
+   char *criteria = malloc(sizeof(char)*200);
+   Usuario* yo = malloc(sizeof(Usuario));
+   printf("Usuario: ");
+   scanf("%15s",yo->login);
+   printf("Contraseña: ");
+   scanf("%15s",yo->pass);
+   result_1 = iniciarsesion_1(yo, clnt);
+	if (result_1 == (int *) NULL) {
 		clnt_perror (clnt, "call failed");
-	} else if((*result_4) == 1){
-      	printf("Bienvenido de nuevo\n");
-      	/*TODO: put stuff right here */
-      	result_1 = obtenerproducto_1(&obtenerproducto_1_arg, clnt);
-		if (result_1 == (Producto *) NULL) {
-			clnt_perror (clnt, "call failed");
-		}
-		result_2 = comprarproducto_1(&comprarproducto_1_arg, clnt);
-		if (result_2 == (int *) NULL) {
-			clnt_perror (clnt, "call failed");
-		}
-		result_3 = quitarproducto_1(&quitarproducto_1_arg, clnt);
-		if (result_3 == (int *) NULL) {
-			clnt_perror (clnt, "call failed");
-		}
-   	} else {
-   		printf("No se encuentra el usuario\n");
-   	}
+	} else if(*result_1 == 1){
+      do{ //Admin User
+         printf("\nAdministrador \n1. Mostrar productos \n2. Buscar un producto \n3. Agregar productos \n4. Cerrar sesión y salir\nSeleccione una opción: ");
+         scanf("%d",&opc);
+         switch(opc){
+            case 1:
+            	consultarproductos_1_arg = "";
+            	result_2 = consultarproductos_1(&consultarproductos_1_arg, clnt);
+					if (result_2 == (char **) NULL) {
+					clnt_perror (clnt, "call failed");
+				}
+               	printf("%s",*result_2);
+               	break;
+            case 2:
+               printf("Busqueda: ");
+               scanf("%s",criteria);
+               result_3 = obtenerproducto_1(&criteria, clnt);
+				if (result_3 == (char **) NULL) {
+					clnt_perror (clnt, "call failed");
+				}
+               printf("%s", *result_3);
+               break;
+            case 3: //Add products
+               break;
+            case 4:
+               printf("Bye\n");
+               break;
+            default:
+               break;
+         }
+      }while(opc!=4);
+   }else if(*result_1 > 0){
+      do{ //Common User
+         printf("\n1. Mostrar productos \n2. Buscar un producto \n3. Comprar productos \n4. Cerrar sesión y salir\nSeleccione una opción: ");
+         scanf("%d",&opc);
+         switch(opc){
+            case 1:
+            	consultarproductos_1_arg = "";
+            	result_2 = consultarproductos_1(&consultarproductos_1_arg, clnt);
+					if (result_2 == (char **) NULL) {
+					clnt_perror (clnt, "call failed");
+				}
+               	printf("%s",*result_2);
+               	break;
+            case 2:
+               printf("Busqueda: ");
+               scanf("%s",criteria);
+               result_3 = obtenerproducto_1(&criteria, clnt);
+				if (result_3 == (char **) NULL) {
+					clnt_perror (clnt, "call failed");
+				}
+               printf("%s", *result_3);
+               break;
+            case 3: //Buy products
+	            result_4 = comprarproducto_1(&comprarproducto_1_arg, clnt);
+				if (result_4 == (int *) NULL) {
+				clnt_perror (clnt, "call failed");
+				}
+				result_5 = quitarproducto_1(&quitarproducto_1_arg, clnt);
+				if (result_5 == (int *) NULL) {
+					clnt_perror (clnt, "call failed");
+				}
+               break;
+            case 4:
+               printf("Bye\n");
+               break;
+            default:
+               break;
+         }
+      }while(opc!=4);
+   } else {
+      printf("No se encuentra el usuario\n");
+   }
+
+	
+	
+	
 	
 #ifndef	DEBUG
 	clnt_destroy (clnt);

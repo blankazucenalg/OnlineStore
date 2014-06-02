@@ -6,27 +6,6 @@
 #include "store.h"
 
 bool_t
-xdr_Producto (XDR *xdrs, Producto *objp)
-{
-	register int32_t *buf;
-
-	int i;
-	 if (!xdr_long (xdrs, &objp->id))
-		 return FALSE;
-	 if (!xdr_vector (xdrs, (char *)objp->producto, 80,
-		sizeof (char), (xdrproc_t) xdr_char))
-		 return FALSE;
-	 if (!xdr_double (xdrs, &objp->precio))
-		 return FALSE;
-	 if (!xdr_int (xdrs, &objp->existencia))
-		 return FALSE;
-	 if (!xdr_vector (xdrs, (char *)objp->descripcion, 255,
-		sizeof (char), (xdrproc_t) xdr_char))
-		 return FALSE;
-	return TRUE;
-}
-
-bool_t
 xdr_Usuario (XDR *xdrs, Usuario *objp)
 {
 	register int32_t *buf;

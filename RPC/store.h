@@ -20,6 +20,15 @@ struct Usuario {
 };
 typedef struct Usuario Usuario;
 
+struct Producto {
+	int idCategoria;
+	char producto[80];
+	float precio;
+	int existencia;
+	char descripcion[255];
+};
+typedef struct Producto Producto;
+
 #define ONLINE_STORE 0x20000001
 #define VERSION_1 1
 
@@ -39,6 +48,9 @@ extern  int * comprarproducto_1_svc(int *, struct svc_req *);
 #define quitarProducto 5
 extern  int * quitarproducto_1(int *, CLIENT *);
 extern  int * quitarproducto_1_svc(int *, struct svc_req *);
+#define agregarProducto 6
+extern  int * agregarproducto_1(Producto *, CLIENT *);
+extern  int * agregarproducto_1_svc(Producto *, struct svc_req *);
 extern int online_store_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
@@ -57,6 +69,9 @@ extern  int * comprarproducto_1_svc();
 #define quitarProducto 5
 extern  int * quitarproducto_1();
 extern  int * quitarproducto_1_svc();
+#define agregarProducto 6
+extern  int * agregarproducto_1();
+extern  int * agregarproducto_1_svc();
 extern int online_store_1_freeresult ();
 #endif /* K&R C */
 
@@ -64,9 +79,11 @@ extern int online_store_1_freeresult ();
 
 #if defined(__STDC__) || defined(__cplusplus)
 extern  bool_t xdr_Usuario (XDR *, Usuario*);
+extern  bool_t xdr_Producto (XDR *, Producto*);
 
 #else /* K&R C */
 extern bool_t xdr_Usuario ();
+extern bool_t xdr_Producto ();
 
 #endif /* K&R C */
 

@@ -12,10 +12,10 @@ typedef struct Usuario{
 typedef struct Producto
 {
    int idCategoria;
-   char *producto;
+   char producto[80];
    float precio;
    int existencia;
-   char *descripcion;
+   char descripcion[255];
 }Producto;
 
    MYSQL *conn;
@@ -116,14 +116,9 @@ const char* obtenerProducto(char *criteria){
       return resultado;
 }
 
-char* agregarProducto(Producto *p){
-      conectarBD();
+void agregarProducto(Producto *p){
+   conectarBD();
    char query[500];
-   char *header,*aux;
-   char *resultado = (char *)malloc(sizeof(char)*BUFSIZ);
-   header = "Id\tProducto\tPrecio\tExistencia\tDescripcion\tCateg\n";
-   aux = (char *)malloc(sizeof(char)*1024);
-
    sprintf(query,"insert into producto (id_categoria, nb_producto, nu_precio, nu_existencia, dx_descripcion) values (%d,'%s',%f,%d,'%s')",p->idCategoria,p->producto, p->precio, p->existencia, p->descripcion);
    /* send SQL query */
    if (mysql_query(conn, query)) {
@@ -132,19 +127,18 @@ char* agregarProducto(Producto *p){
    }
    res = mysql_use_result(conn);
    /* output table name */
-   sprintf(resultado,"%s", header);
-   if ((row = mysql_fetch_row(res)) != NULL) {
-      resultado = "Insertado con éxito.";
-   } else {
-      resultado = "Error al insertar";
-   }
+   //if ((row = mysql_fetch_row(res)) != NULL) {
+   //   printf("Insertado\n");
+   //} else {
+    //  printf("No insertado\n");
+   //}
    desconectarBD();
-      return resultado;
 }
 
 main() {
    int opc, userType;
    char *criteria = malloc(sizeof(char)*200);
+   char *result = malloc(sizeof(char)*BUFSIZ);
    Usuario* yo = malloc(sizeof(Usuario));
    Producto* p = malloc(sizeof(Producto));
    printf("Usuario: ");
@@ -170,17 +164,21 @@ main() {
             case 3: //Add products
                printf("Introduce a continuación los datos del producto\n");
                printf("idCategoria: ");
+               setbuf( stdin, NULL ); 
                scanf("%d",&(p->idCategoria));
                printf("Nombre: ");
-               scanf("%s",p->producto);
+               setbuf( stdin, NULL ); 
+               gets(p->producto);
                printf("Precio: ");
+               setbuf( stdin, NULL ); 
                scanf("%f",&(p->precio));
                printf("Existencia: ");
+               setbuf( stdin, NULL ); 
                scanf("%d",&(p->existencia));
                printf("Descripción: ");
-               scanf("%s",p->descripcion);
-               printf("%s\n", agregarProducto(p));
-
+               setbuf( stdin, NULL ); 
+               gets(p->descripcion);
+               agregarProducto(p);
                break;
             case 4:
                printf("Bye\n");

@@ -146,3 +146,27 @@ quitarproducto_1_svc(int *argp, struct svc_req *rqstp)
 
 	return &result;
 }
+
+int*
+agregarproducto_1_svc(Producto *argp, struct svc_req *rqstp)
+{
+	static int  result;
+
+	conectarBD();
+   char query[500];
+   sprintf(query,"insert into producto (id_categoria, nb_producto, nu_precio, nu_existencia, dx_descripcion) values (%d,'%s',%f,%d,'%s')",argp->idCategoria,argp->producto, argp->precio, argp->existencia, argp->descripcion);
+   /* send SQL query */
+   if (mysql_query(conn, query)) {
+      fprintf(stderr, "%s", mysql_error(conn));
+      exit(1);
+   }
+   res = mysql_use_result(conn);
+   /* output table name */
+   //if ((row = mysql_fetch_row(res)) != NULL) {
+   //   printf("Insertado\n");
+   //} else {
+    //  printf("No insertado\n");
+   //}
+   desconectarBD();
+	return &result;
+}

@@ -21,6 +21,8 @@ online_store_1(char *host)
 	int  comprarproducto_1_arg;
 	int  *result_5;
 	int  quitarproducto_1_arg;
+	int  *result_6;
+	Producto  agregarproducto_1_arg;
 
 #ifndef	DEBUG
 	clnt = clnt_create (host, ONLINE_STORE, VERSION_1, "udp");
@@ -29,10 +31,10 @@ online_store_1(char *host)
 		exit (1);
 	}
 #endif	/* DEBUG */
-
 int opc;
    char *criteria = malloc(sizeof(char)*200);
    Usuario* yo = malloc(sizeof(Usuario));
+   Producto* p = malloc(sizeof(Producto));
    printf("Usuario: ");
    scanf("%15s",yo->login);
    printf("Contraseña: ");
@@ -63,6 +65,26 @@ int opc;
                printf("%s", *result_3);
                break;
             case 3: //Add products
+            	printf("Introduce a continuación los datos del producto\n");
+               printf("idCategoria: ");
+               setbuf( stdin, NULL ); 
+               scanf("%d",&(p->idCategoria));
+               printf("Nombre: ");
+               setbuf( stdin, NULL ); 
+               gets(p->producto);
+               printf("Precio: ");
+               setbuf( stdin, NULL ); 
+               scanf("%f",&(p->precio));
+               printf("Existencia: ");
+               setbuf( stdin, NULL ); 
+               scanf("%d",&(p->existencia));
+               printf("Descripción: ");
+               setbuf( stdin, NULL ); 
+               gets(p->descripcion);
+            result_6 = agregarproducto_1(p, clnt);
+			if (result_6 == (int *) NULL) {
+			clnt_perror (clnt, "call failed");
+			}
                break;
             case 4:
                printf("Bye\n");
@@ -113,10 +135,6 @@ int opc;
    } else {
       printf("No se encuentra el usuario\n");
    }
-
-	
-	
-	
 	
 #ifndef	DEBUG
 	clnt_destroy (clnt);

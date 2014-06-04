@@ -25,6 +25,7 @@ online_store_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		char *obtenerproducto_1_arg;
 		int comprarproducto_1_arg;
 		int quitarproducto_1_arg;
+		Producto agregarproducto_1_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -63,6 +64,12 @@ online_store_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		_xdr_argument = (xdrproc_t) xdr_int;
 		_xdr_result = (xdrproc_t) xdr_int;
 		local = (char *(*)(char *, struct svc_req *)) quitarproducto_1_svc;
+		break;
+
+	case agregarProducto:
+		_xdr_argument = (xdrproc_t) xdr_Producto;
+		_xdr_result = (xdrproc_t) xdr_int;
+		local = (char *(*)(char *, struct svc_req *)) agregarproducto_1_svc;
 		break;
 
 	default:
